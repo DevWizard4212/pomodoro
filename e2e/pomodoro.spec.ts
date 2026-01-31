@@ -25,13 +25,6 @@ test('shows session counter', async ({ page }) => {
 
 // ─── Navigation ─────────────────────────────────────────
 
-test('navigate to Stats tab', async ({ page }) => {
-  await page.getByRole('button', { name: 'Stats' }).click()
-  await expect(page.getByText('Statistics')).toBeVisible()
-  await expect(page.getByText('Total sessions')).toBeVisible()
-  await expect(page.getByText('Streak')).toBeVisible()
-})
-
 test('navigate to Settings tab', async ({ page }) => {
   await page.getByRole('button', { name: 'Settings' }).click()
   await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible()
@@ -136,12 +129,3 @@ test('settings are persisted in localStorage', async ({ page }) => {
   await expect(page.locator('input[type="number"]').first()).toHaveValue('15')
 })
 
-// ─── Stats ──────────────────────────────────────────────
-
-test('stats page shows zero state', async ({ page }) => {
-  await page.getByRole('button', { name: 'Stats' }).click()
-  await expect(page.getByText('0 / 8')).toBeVisible()         // today: 0/8
-  await expect(page.getByText('Total sessions')).toBeVisible()
-  await expect(page.getByText('Total focus')).toBeVisible()
-  await expect(page.getByText('Focus minutes — last 7 days')).toBeVisible()
-})

@@ -1,9 +1,8 @@
 import { create } from 'zustand'
-import type { Session, PomodoroSettings, SessionType, TimerStatus, View } from '../types'
+import type { PomodoroSettings, SessionType, TimerStatus, View } from '../types'
 import { loadFromStorage, saveToStorage } from '../utils/storage'
 import { minutesToSeconds } from '../utils/time'
 
-const SESSIONS_KEY = 'pomodoro-sessions'
 const SETTINGS_KEY = 'pomodoro-settings'
 
 const defaultSettings: PomodoroSettings = {
@@ -26,7 +25,6 @@ interface PomodoroState {
   view: View
 
   // Data
-  sessions: Session[]
   settings: PomodoroSettings
 
   // Actions
@@ -64,7 +62,6 @@ function getNextSessionType(
 
 export const usePomodoroStore = create<PomodoroState>((set, get) => {
   const savedSettings = loadFromStorage<PomodoroSettings>(SETTINGS_KEY, defaultSettings)
-  const savedSessions = loadFromStorage<Session[]>(SESSIONS_KEY, [])
 
   return {
     timerStatus: 'idle',
@@ -72,7 +69,6 @@ export const usePomodoroStore = create<PomodoroState>((set, get) => {
     currentSessionType: 'focus',
     focusCount: 0,
     view: 'timer',
-    sessions: savedSessions,
     settings: savedSettings,
 
     setView: (view) => set({ view }),
@@ -117,17 +113,6 @@ export const usePomodoroStore = create<PomodoroState>((set, get) => {
 
     completeSession: () => {
       const { currentSessionType, focusCount, settings } = get()
-      const duration = getDurationForType(currentSessionType, settings)
-
-      const session: Session = {
-        id: crypto.randomUUID(),
-        type: currentSessionType,
-        duration,
-        completedAt: new Date().toISOString(),
-      }
-
-      const newSessions = [...get().sessions, session]
-      saveToStorage(SESSIONS_KEY, newSessions)
 
       const newFocusCount = currentSessionType === 'focus' ? focusCount + 1 : focusCount
       const nextType = getNextSessionType(
@@ -138,7 +123,6 @@ export const usePomodoroStore = create<PomodoroState>((set, get) => {
       const resetFocusCount = nextType === 'focus' && currentSessionType === 'longBreak' ? 0 : newFocusCount
 
       set({
-        sessions: newSessions,
         currentSessionType: nextType,
         timeRemaining: getDurationForType(nextType, settings),
         focusCount: resetFocusCount,

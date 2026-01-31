@@ -77,7 +77,7 @@ function NumberField({
   max: number
 }) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between gap-4">
       <span className="text-slate-300">{label}</span>
       <input
         type="number"

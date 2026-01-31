@@ -4,7 +4,6 @@ import type { View } from '../types'
 
 const tabs: { key: View; label: string }[] = [
   { key: 'timer', label: 'Timer' },
-  { key: 'stats', label: 'Stats' },
   { key: 'settings', label: 'Settings' },
 ]
 

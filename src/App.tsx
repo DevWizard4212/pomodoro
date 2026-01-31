@@ -5,7 +5,6 @@ import { Layout } from './components/Layout'
 import { Timer } from './components/Timer'
 import { Controls } from './components/Controls'
 import { SessionInfo } from './components/SessionInfo'
-import { Stats } from './components/Stats'
 import { Settings } from './components/Settings'
 
 export default function App() {
@@ -13,7 +12,7 @@ export default function App() {
   useNotification()
 
   const view = usePomodoroStore((s) => s.view)
-
+  
   return (
     <Layout>
       {view === 'timer' && (
@@ -23,7 +22,6 @@ export default function App() {
           <Controls />
         </div>
       )}
-      {view === 'stats' && <Stats />}
       {view === 'settings' && <Settings />}
     </Layout>
   )
